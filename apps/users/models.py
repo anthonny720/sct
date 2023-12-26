@@ -28,6 +28,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         EDITOR = 'EDITOR', 'Editor'
         VIEWER = 'VIEWER', 'Visualizador'
         FIND = 'FIND', 'Buscador'
+        PRODUCTION = 'PRODUCTION', 'Producción'
 
 
     email = models.EmailField(max_length=255, unique=True, verbose_name='Correo electrónico')

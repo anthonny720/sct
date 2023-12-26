@@ -47,8 +47,8 @@ class Staff(models.Model):
         verbose_name_plural = 'Personal'
         ordering = ['last_name', 'name']
 
-    name = models.CharField(max_length=50, verbose_name='Nombre')
-    last_name = models.CharField(max_length=50, verbose_name='Apellido')
+    name = models.CharField(max_length=100, verbose_name='Nombre')
+    last_name = models.CharField(max_length=100, verbose_name='Apellido')
     full_name = models.CharField(max_length=100, verbose_name='Nombre completo', blank=True, null=True)
     dni = models.CharField(max_length=8, verbose_name='DNI')
     uuid = models.CharField(editable=True, unique=True, verbose_name='UUID',max_length=15, blank=True, null=True)

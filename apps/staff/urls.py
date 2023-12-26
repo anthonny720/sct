@@ -1,7 +1,6 @@
 from django.urls import path
 
-from .views import ListStaffView, DetailStaffView, ListDepartmentView, ListAbsenteeismView, FindUserView, \
-    StaffNotTrackingView
+from .views import ListStaffView, DetailStaffView, ListDepartmentView, ListAbsenteeismView, FindUserView, StaffNotTrackingView
 
 urlpatterns = [path('', ListStaffView.as_view()), path('<int:pk>/', DetailStaffView.as_view()),
                path('department/', ListDepartmentView.as_view()), path('absenteeism/', ListAbsenteeismView.as_view()),

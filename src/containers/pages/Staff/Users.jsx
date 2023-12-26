@@ -50,7 +50,7 @@ const Users = () => {
         </div>)
     }
 
-    if (user && user.permissions === 'VIEWER') return <Navigate to='/home'/>;
+    if (user && user.permissions !== 'EDITOR') return <Navigate to='/home'/>;
 
     return (<Layout>
         <Helmet>

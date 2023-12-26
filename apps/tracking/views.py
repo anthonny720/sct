@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.staff.models import Staff
-from apps.staff.serializers import StaffSerializer
 from apps.tracking.models import Tracking, Holiday
 from apps.tracking.serializers import TrackingSerializer
 
@@ -86,7 +85,6 @@ class ScannerTrackingView(APIView):
                 user = Staff.objects.get(uuid=code)
             except Staff.DoesNotExist:
                 return Response({'message': 'No existe el usuario'}, status=status.HTTP_404_NOT_FOUND)
-
 
             tracking_exists = Tracking.objects.filter(staff=user, date=date.today()).first()
 

@@ -40,7 +40,7 @@ const Outsourcing = () => {
         dispatch(get_outsourcing(payload))
     }, [dispatch, params]);
 
-    if (user && user.permissions === 'VIEWER') return <Navigate to='/home'/>;
+    if (user && user.permissions !== 'EDITOR') return <Navigate to='/home'/>;
 
 
     const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
