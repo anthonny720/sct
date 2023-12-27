@@ -38,8 +38,8 @@ const Home = () => {
 
     const handleInputChange = (e) => {
         const inputValue = e.target.value;
-        if (inputValue.length <= 8) {
-            setCode(inputValue);
+        if (inputValue.length <= 15) {
+            setCode(inputValue.replace(/'/g, '-'));
         }
     };
 
@@ -67,6 +67,7 @@ const Home = () => {
             ></div>
             <div className="container mx-auto px-4 h-full">
                 <div className="flex content-center items-center justify-center h-full">
+
 
                     <div className="w-full lg:w-7/12 px-4">
 
@@ -115,8 +116,8 @@ const Home = () => {
                                         type="text"
                                         tabIndex={0}
                                         className="text-sm w-2 absolute -top-3 bg-transparent px-4 py-2 border border-solid border-gray-300 rounded mt-4"
-                                        maxLength={8}
-                                        minLength={8}
+                                        maxLength={15}
+                                        minLength={15}
                                     />
                                 </form>
                                 <p className={"text-black text-center"}></p>
