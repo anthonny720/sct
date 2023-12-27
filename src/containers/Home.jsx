@@ -16,10 +16,10 @@ const Home = () => {
 
 
     useEffect(() => {
-        inputRef.current.focus();
+        inputRef?.current?.focus();
         const handleClickOutside = (e) => {
-            if (!inputRef.current.contains(e.target)) {
-                inputRef.current.focus();
+            if (!inputRef.current?.contains(e.target)) {
+                inputRef.current?.focus();
             }
         };
         document.addEventListener("click", handleClickOutside);
@@ -130,10 +130,10 @@ const Home = () => {
                                             hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'America/Lima'
                                         })}</span></p>
                                     <p className={"text-center"}>Fin
-                                        receso: <span>{info?.lunch_end &&  info?.lunch_end !== null && new Date(info?.lunch_end).toLocaleTimeString('es-PE', {
+                                        receso: <span>{info?.lunch_end && info?.lunch_end !== null && new Date(info?.lunch_end).toLocaleTimeString('es-PE', {
                                             hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'America/Lima'
                                         })}</span></p>
-                                    <p className={"text-center"}>Salida: <span>{info?.check_out && info?.check_out !== null &&  new Date(info?.check_out).toLocaleTimeString('es-PE', {
+                                    <p className={"text-center"}>Salida: <span>{info?.check_out && info?.check_out !== null && new Date(info?.check_out).toLocaleTimeString('es-PE', {
                                         hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'America/Lima'
                                     })}</span></p>
                                 </div>
