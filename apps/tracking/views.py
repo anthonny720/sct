@@ -79,7 +79,7 @@ class ScannerTrackingView(APIView):
             code = str(data['code']).strip()
             category = data['attendance'].strip()
 
-            if len(code) != 15:
+            if len(code) != 14:
                 return Response({'message': 'El codigo secreto es invalido'}, status=status.HTTP_400_BAD_REQUEST)
             try:
                 user = Staff.objects.get(uuid=code)

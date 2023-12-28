@@ -146,9 +146,9 @@ class ListAbsenteeismView(ListAbstractView):
 class FindUserView(APIView):
     def post(self, request, *args, **kwargs):
         try:
-            uuid = request.data.get('code').strip()
-            print(uuid)
+            uuid = request.data.get('code')
             if uuid:
+                uuid = uuid.strip()
                 try:
                     user = Staff.objects.get(uuid__icontains=uuid)
                     serializer = StaffSerializer(user, many=False)

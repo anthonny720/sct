@@ -11,7 +11,7 @@ const ChangePassword = () => {
     const user = useSelector(state => state.Auth?.user);
 
 
-    if (user && user.permissions === 'VIEWER') return <Navigate to='/home'/>;
+    if (user && (user.permissions === 'VIEWER' || user.permissions === 'FIND')) return <Navigate to='/home'/>;
     return (<Layout>
         <Helmet>
             <title>Restablecer contraseña</title>

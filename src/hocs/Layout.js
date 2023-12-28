@@ -18,12 +18,11 @@ export const Layout = (props) => {
         dispatch(load_user())
     }, []);
 
-
     if (!isAuthenticated) return <Navigate to='/'/>;
 
     return (<>
             <Helmet>
-                <title>Sistema de Control de Tareos (SCT)</title>
+                <title>Sistema de Control de Tareos (SCT)</title>
                 <meta name="description" content="App created by Anthonny Gómez"/>
             </Helmet>
 

@@ -6,6 +6,7 @@ import {ClockIcon} from "@heroicons/react/24/outline";
 import {CheckCircleIcon} from "@heroicons/react/24/solid";
 import Cerro from "../assets/back.png"
 import {Helmet} from "react-helmet";
+import {Navigate} from "react-router-dom";
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -13,6 +14,8 @@ const Home = () => {
     const [code, setCode] = useState('');
     const inputRef = useRef(null);
     const [attendance, setAttendance] = useState('check_in');
+
+    const user = useSelector(state => state.Auth?.user);
 
 
     useEffect(() => {
@@ -53,6 +56,8 @@ const Home = () => {
     }, {id: 'lunch_end', label: 'Salida receso', icon: <ClockIcon className="h-5 w-5"/>}, {
         id: 'check_out', label: 'Salida', icon: <ClockIcon className="h-5 w-5"/>
     },];
+
+    if (user && (user.permissions === 'FIND' || user.permissions === 'VIEWER')) return <Navigate to='/scanner'/>;
 
     return (<Layout>
         <Helmet>

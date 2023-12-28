@@ -1,4 +1,6 @@
 import {
+    FIND_USER_FAIL,
+    FIND_USER_SUCCESS,
     GET_ABSENTEEISM_FAIL,
     GET_ABSENTEEISM_SUCCESS,
     GET_DEPARTMENTS_FAIL,
@@ -10,7 +12,7 @@ import {
 } from "../actions/types";
 
 const initialState = {
-    departments: null, absenteeism: null, staffs: null, users_not_tracking: null
+    departments: null, absenteeism: null, staffs: null, users_not_tracking: null, user: null
 }
 
 export default function Staff(state = initialState, action) {
@@ -49,6 +51,14 @@ export default function Staff(state = initialState, action) {
         case GET_USERS_NOT_TRACKING_FAIL:
             return {
                 ...state, users_not_tracking: null
+            }
+        case FIND_USER_SUCCESS:
+            return {
+                ...state, user: payload.data
+            }
+        case FIND_USER_FAIL:
+            return {
+                ...state, user: null
             }
 
         default:

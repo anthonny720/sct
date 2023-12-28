@@ -22,10 +22,10 @@ export default function PopoverMe() {
         setRedirect(true);
     }
     if (redirect) {
-
         window.location.reload(false)
         return <Navigate to='/'/>;
     }
+
     return (<div className="relative w-full max-w-sm px-4">
         <Popover className="relative">
             {({open}) => (<>
