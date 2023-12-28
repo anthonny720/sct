@@ -110,7 +110,7 @@ const Scanner = () => {
             />}
             <div className={"text-black bg-white w-11/12 rounded-2xl relative mt-10"}>
                 <div className={"flex flex-col items-center justify-center absolute bg-green-400 rounded-t-2xl w-full"}>
-                    <p className={"text-sm font-bold text-white"}>{info?.staff_name ? info?.staff_name : 'Registro'}</p>
+                    <p className={"text-xs md:text-md font-bold text-white"}>{info?.staff_name ? info?.staff_name : 'Registro'}</p>
                 </div>
                 <div className={"grid md:grid-cols-2 text-gray-400 text-sm font-light w-full mb-4 px-4 pt-8"}>
                     {option && option.id !== 'find' ? <>
