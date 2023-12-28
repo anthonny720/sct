@@ -33,7 +33,7 @@ const Home = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (code.length === 15 && attendance !== '') {
+        if (code.length === 8 && attendance !== '') {
             dispatch(send_tracking({code, attendance}));
             setCode('');
         }
@@ -41,7 +41,7 @@ const Home = () => {
 
     const handleInputChange = (e) => {
         const inputValue = e.target.value;
-        if (inputValue.length <= 15) {
+        if (inputValue.length <= 8) {
             setCode(inputValue.replace(/'/g, '-'));
         }
     };
@@ -121,8 +121,8 @@ const Home = () => {
                                         type="text"
                                         tabIndex={0}
                                         className="text-sm w-2 absolute -top-3 bg-transparent px-4 py-2 border border-solid border-gray-300 rounded mt-4"
-                                        maxLength={15}
-                                        minLength={15}
+                                        maxLength={8}
+                                        minLength={8}
                                     />
                                 </form>
                                 <p className={"text-black text-center"}></p>

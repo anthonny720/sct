@@ -76,7 +76,7 @@ class Staff(models.Model):
         if not self.uuid:  # Si no hay UUID asignado, generarlo
             unique_seed = f"{self.dni}{self.full_name}"
             generated_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, unique_seed)
-            self.uuid = str(generated_uuid)[0:15]
+            self.uuid = str(generated_uuid)[0:8]
         if self.uuid:
             pass
 

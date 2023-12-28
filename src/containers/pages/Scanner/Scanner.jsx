@@ -22,7 +22,7 @@ const Scanner = () => {
 
     useEffect(() => {
         // Move the logic that depends on option inside this block
-        if (data && size(data) ===15) {
+        if (data && size(data) ===8) {
             setTorchOn(false);
 
             if (option.id === 'find') {
