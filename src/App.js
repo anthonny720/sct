@@ -14,6 +14,7 @@ import Tracking from "./containers/pages/Tracking/Tracking";
 import Summary from "./containers/pages/Tracking/Summary";
 import Outsourcing from "./containers/pages/Tracking/Outsourcing";
 import Calendar from "./containers/pages/Tracking/Calendar";
+import Scanner from "./containers/pages/Scanner/Scanner";
 
 const App = () => {
 
@@ -28,6 +29,9 @@ const App = () => {
                             {/*Error Display*/}
                             <Route path="*" element={<Error404/>}/>
                             <Route exact path="/home" element={<Home/>}/>
+
+                            {/*Scanner*/}
+                            <Route path="/scanner" element={<Scanner/>}/>
 
                             {/*Authentication*/}
                             <Route path="/" element={<Login/>}/>

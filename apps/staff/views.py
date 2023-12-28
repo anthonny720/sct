@@ -147,6 +147,7 @@ class FindUserView(APIView):
     def post(self, request, *args, **kwargs):
         try:
             uuid = request.data.get('code').strip()
+            print(uuid)
             if uuid:
                 try:
                     user = Staff.objects.get(uuid__icontains=uuid)

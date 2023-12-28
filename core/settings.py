@@ -17,16 +17,16 @@ SITE_NAME = 'Greenbox'
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['http://sct.greenbox.pe', 'https://sct.greenbox.pe']
+ALLOWED_HOSTS = ['py.au.ngrok.io','sct.greenbox.pe','localhost','nx.in.ngrok.io']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 if not DEBUG:
     CORS_ORIGIN_WHITELIST = ['http://sct.greenbox.pe', 'https://sct.greenbox.pe']
     CSRF_TRUSTED_ORIGINS = ['http://sct.greenbox.pe', 'https://sct.greenbox.pe']
-# CSRF_TRUSTED_ORIGINS = ['https://py.sa.ngrok.io']
+CSRF_TRUSTED_ORIGINS = ['https://py.au.ngrok.io','http://py.au.ngrok.io','https://nx.in.ngrok.io']
 
 # Application definition
 DJANGO_APPS = ['django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions',
@@ -129,7 +129,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build/static')]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Rest Framework
+# # Rest Framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',), }

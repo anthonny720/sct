@@ -9,9 +9,12 @@ import {
     PaperAirplaneIcon,
     UsersIcon
 } from "@heroicons/react/24/outline";
+import {ViewfinderCircleIcon} from "@heroicons/react/24/solid";
 
 const Sidebar = () => {
-    const menus = [{name: "Inicio", link: '/home', icon: <HomeIcon className={"w-6 h-6"}/>}, {
+    const menus = [{name: "Inicio", link: '/home', icon: <HomeIcon className={"w-6 h-6"}/>},
+        {name: "Search", link: '/scanner', icon: <ViewfinderCircleIcon className={"w-6 h-6"}/>},
+        {
         name: "Empleados", link: '/people', icon: <UsersIcon className={"w-6 h-6"}/>
     }, {
         name: "Registro de horas", link: '/attendance', icon: <ClockIcon className={"w-6 h-6"}/>
@@ -58,6 +61,7 @@ const Sidebar = () => {
 
             {menus?.map((menu, i) => (<NavLink
                 to={menu?.link}
+                key={i}
                 className={({isActive}) => ` group flex items-center text-sm gap-3.5 font-medium px-1 py-2 rounded-md
             ${isActive ? 'bg-green-500 text-green-500 bg-opacity-10 ' : 'bg-white text-gray-400 hover:text-green-400 hover:bg-green-500 hover:bg-opacity-10'} `}
             >

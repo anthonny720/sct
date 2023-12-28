@@ -36,7 +36,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=255, blank=True, null=True, verbose_name='Apellido(s)')
     is_active = models.BooleanField(default=True, verbose_name='Es activo')
     is_staff = models.BooleanField(default=False, verbose_name='Es administrador')
-    permissions = models.CharField(max_length=6, choices=Permissions.choices, default='EDITOR',verbose_name='Permisos')
+    permissions = models.CharField(max_length=10, choices=Permissions.choices, default='EDITOR',verbose_name='Permisos')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Creado el')
     history = HistoricalRecords()
 
