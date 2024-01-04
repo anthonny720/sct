@@ -16,7 +16,6 @@ const Departments = () => {
 
     if (user && user.permissions !== 'EDITOR') return <Navigate to='/home'/>;
     return (<div className="mx-auto container bg-white ">
-
         <Tree items={payload}/>
     </div>);
 };

@@ -3,7 +3,7 @@ import {map} from 'lodash'
 import {size} from "lodash/collection";
 import {CheckCircleIcon, XCircleIcon} from "@heroicons/react/24/solid";
 
-const Table = ({data, update}) => {
+const Table = ({data, update,reference}) => {
 
     function calculateTotalTime(timeStrings) {
         const totalSeconds = timeStrings.reduce((total, timeString) => {
@@ -19,9 +19,9 @@ const Table = ({data, update}) => {
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
     }
 
-    const columns = ['Nombre', 'Fecha', 'Entrada', 'Entrada Break', 'Salida Break', 'Salida', 'Ausentismo', 'Horas ausentismo', 'Horas laborales', 'Horas 25%', 'Horas 35%', 'Tardanza']
+    const columns = ['Nombre', 'Fecha', 'Entrada', 'Entrada Break', 'Salida Break', 'Salida', 'Ausentismo', 'Horas ausentismo', 'Horas laborales', 'Horas 25%', 'Horas 35%', 'Tardanza',]
     return (<div className="relative overflow-x-auto scrollbar-hide ">
-            <table className="w-full text-sm text-left text-gray-500 ">
+            <table className="w-full text-sm text-left text-gray-500 " ref={reference}>
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                 <tr>
                     {map(columns, (item, index) => {
@@ -76,7 +76,8 @@ const Table = ({data, update}) => {
                             <XCircleIcon className={"w-4 mr-2 text-red-400"}/>} {item?.overtime_25_hours}</p></td>
                         <td className="px-6 py-2 text-center">{item?.overtime_35_hours}</td>
                         <td className="px-6 py-2 text-center">{item?.delay_hours}</td>
-                        <td className={"hidden"}>{item?.approved && "SI"}</td>
+                        <td className={"hidden"}>{item?.is_day_shift ? "Dia":"Noche"}</td>
+                        <td className={"hidden"}>{item?.approved ? "SI":"NO"}</td>
                     </tr>)
                 })}
                 </tbody>

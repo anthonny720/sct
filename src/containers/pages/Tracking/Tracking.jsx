@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Layout from "../../../hocs/Layout";
 import {PlusIcon} from "@heroicons/react/24/solid";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,8 +13,10 @@ import {Helmet} from "react-helmet";
 import {PaperAirplaneIcon} from "@heroicons/react/24/outline";
 import {map} from "lodash";
 import ListUsers from "../../../components/Tracking/ListUsers";
+import {DownloadTableExcel} from "react-export-table-to-excel";
 
 const Tracking = () => {
+    const tableRef = useRef(null);
     const dispatch = useDispatch();
     const payload = useSelector(state => state.Tracking.tracking);
     const users_not_tracking = useSelector(state => state.Staff.users_not_tracking);
@@ -67,7 +69,23 @@ const Tracking = () => {
                 <PlusIcon className="w-5 h-5 " aria-hidden="true"/>
             </button>
 
+
             <div className={"flex flex-col md:flex-row  gap-4 items-center"}>
+                 <DownloadTableExcel
+                    filename={`Registro asistencia`}
+                    sheet="Reporte"
+                    currentTableRef={tableRef.current}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         className="icon cursor-pointer icon-tabler icon-tabler-edit text-black" width={20}
+                         height={20}
+                         viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none"
+                         strokeLinecap="round" strokeLinejoin="round">
+                        <path strokeLinecap="round" strokeLinejoin="round"
+                              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+                    </svg>
+
+                </DownloadTableExcel>
 
 
                 <div className="flex flex-col md:flex-row items-center gap-2 justify-between py-4 bg-white ">
@@ -107,7 +125,7 @@ const Tracking = () => {
 
                 <PaperAirplaneIcon className={'h-6 w-6 cursor-pointer text-green-400'} onClick={handleFilter}/>
             </div>
-            <Table data={payload} update={handleUpdate}/>
+            <Table data={payload} update={handleUpdate} reference={tableRef}/>
 
         </div>
     </Layout>);

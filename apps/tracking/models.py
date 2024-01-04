@@ -35,9 +35,9 @@ class Tracking(models.Model):
     overtime_25_hours = models.TimeField(verbose_name='Horas extras 25%', blank=True, null=True, default='00:00:00')
     overtime_35_hours = models.TimeField(verbose_name='Horas extras 35%', blank=True, null=True, default='00:00:00')
 
-    # delay_hours = models.TimeField(verbose_name='Horas de retraso', blank=True, null=True, default='00:00:00')
+    delay_hours = models.TimeField(verbose_name='Horas de retraso', blank=True, null=True, default='00:00:00')
     #
-    # approved = models.BooleanField(verbose_name='Aprobado', default=False)
+    approved = models.BooleanField(verbose_name='Aprobado', default=False)
 
     # Campo para indicar si es horario diurno o nocturno
     is_day_shift = models.BooleanField(verbose_name='Horario día/noche', default=True)
@@ -104,28 +104,24 @@ class Tracking(models.Model):
             self.overtime_25_hours = time(0)
             self.overtime_35_hours = time(0)
 
-        if self.absenteeism:
-            if self.absenteeism.name == 'Inasistencia' or self.absenteeism.name == 'Suspensión' or self.absenteeism.name == 'Descanso semanal' or self.absenteeism.name == 'Descanso feriado':
-                self.overtime_25_hours = time(0)
-                self.overtime_35_hours = time(0)
-                self.worked_hours = timedelta(hours=0)
+
 
         super().save(force_insert, force_update, using, update_fields)
 
 
-# @receiver(post_save, sender=Tracking)
-# def update_delay(sender, instance, **kwargs):
-#     try:
-#         minute = instance.check_in.minute
-#         if minute > 20:
-#             instance.check_in = instance.check_in.replace(hour=instance.check_in.hour + 1, minute=0)
-#             instance.delay_hours = instance.delay_hours.replace(hour=0, minute=0)
-#         else:
-#             instance.delay_hours = instance.delay_hours.replace(hour=0, minute=minute)
-#         Tracking.objects.filter(pk=instance.pk).update(check_in=instance.check_in, delay_hours=instance.delay_hours)
-#
-#     except Exception as e:
-#         pass
+@receiver(post_save, sender=Tracking)
+def update_delay(sender, instance, **kwargs):
+    try:
+        minute = instance.check_in.minute
+        if minute > 20:
+            instance.check_in = instance.check_in.replace(hour=instance.check_in.hour + 1, minute=0)
+            instance.delay_hours = instance.delay_hours.replace(hour=0, minute=0)
+        else:
+            instance.delay_hours = instance.delay_hours.replace(hour=0, minute=minute)
+        Tracking.objects.filter(pk=instance.pk).update(check_in=instance.check_in, delay_hours=instance.delay_hours)
+
+    except Exception as e:
+        pass
 
 
 class Holiday(models.Model):

@@ -161,6 +161,21 @@ const Form = ({close, data, params}) => {
                         />
                     </Switch>
                 </div>
+                <div className="col-span-6 sm:col-span-3">
+                    <label htmlFor="trusted"
+                           className={`block mb-2 text-sm font-medium ${!formik.errors.trusted ? 'text-gray-900' : 'text-red-400'}`}>Personal de confianza</label>
+                    <Switch
+                        id={'trusted'}
+                        name={'trusted'}
+                        checked={formik.values.trusted}
+                        onChange={() => formik.setFieldValue('trusted', !formik.values.trusted)}
+                        className={`${formik.values.trusted ? 'bg-green-600' : 'bg-green-200'} relative inline-flex h-6 w-11 items-center rounded-full`}
+                    >
+                        <span
+                            className={`${formik.values.trusted ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                        />
+                    </Switch>
+                </div>
             </div>
         </div>
         <div className="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b ">
@@ -185,6 +200,7 @@ const initialValues = (data) => {
         birthday: data?.birthday || undefined,
         area: data?.area || '',
         overtime_hours: data?.overtime_hours || '00:00:00',
+        trusted: data?.trusted || false,
 
     }
 }
@@ -202,7 +218,7 @@ const newSchema = () => {
         birthday: Yup.date(),
         area: Yup.number().required(),
         overtime_hours: Yup.string().required(),
-
+        trusted: Yup.bool().required(),
     }
 }
 

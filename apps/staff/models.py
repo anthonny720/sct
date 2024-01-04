@@ -63,6 +63,7 @@ class Staff(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Creado el')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Actualizado el')
     overtime_hours = models.DurationField(verbose_name='Horas extras', blank=True, null=True, default='00:00:00')
+    trusted = models.BooleanField(default=False, verbose_name='Personal de confianza')
     history = HistoricalRecords()
 
     def __str__(self):
@@ -73,11 +74,5 @@ class Staff(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.full_name = self.last_name + ' ' + self.name
-        if not self.uuid:  # Si no hay UUID asignado, generarlo
-            unique_seed = f"{self.dni}{self.full_name}"
-            generated_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, unique_seed)
-            self.uuid = str(generated_uuid)[0:8]
-        if self.uuid:
-            pass
-
+        self.uuid = self.dni
         super(Staff, self).save()

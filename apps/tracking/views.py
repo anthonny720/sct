@@ -80,7 +80,7 @@ class ScannerTrackingView(APIView):
             category = data['attendance'].strip()
 
             if len(code) != 8:
-                return Response({'message': 'El codigo secreto es invalido'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'El codigo  es invalido'}, status=status.HTTP_400_BAD_REQUEST)
             try:
                 user = Staff.objects.get(uuid=code)
             except Staff.DoesNotExist:
@@ -218,7 +218,7 @@ class SummaryView(APIView):
             if user:
                 users = Staff.objects.filter(full_name__icontains=user)
             else:
-                users = Staff.objects.all()
+                users = Staff.objects.filter(trusted=False)
             if department:
                 users = users.filter(area__id=department)
 
@@ -304,7 +304,7 @@ class OutsourcingView(APIView):
             # Filtrar registros de asistencia dentro del rango de fechas
             attendances = Tracking.objects.filter(date__range=[start_date, end_date])
 
-            users = Staff.objects.all()
+            users = Staff.objects.filter(trusted=False)
 
             summary = []
 
@@ -434,7 +434,7 @@ class CalendarView(APIView):
                 users = Staff.objects.filter(full_name__icontains=user)
             else:
                 # Obtener todos los usuarios
-                users = Staff.objects.all()
+                users = Staff.objects.filter(trusted=False)
 
             if department:
                 users = users.filter(area__id=department)
@@ -501,25 +501,20 @@ class CalendarView(APIView):
                                 total_compensation += timedelta(hours=attendance.absenteeism_hours_extra.hour,
                                                                 minutes=attendance.absenteeism_hours_extra.minute,
                                                                 seconds=attendance.absenteeism_hours_extra.second)
-
                     # Formatear las horas en el formato 00:00
                     formatted_hours = format_time(total_worked_hours)
                     formatted_delay_hours = format_time(total_delay_hours)
                     formatted_overtime_hours = format_time(total_overtime_hours)
                     formatted_compensation = format_time(total_compensation)
-
                     # Agregar las horas trabajadas al resumen del usuario
                     users_summary[user.get_full_name()].append(
                         {'worked_hours': formatted_hours if total_worked_hours.total_seconds() > 0 else "00:00",
                          'delay_hours': formatted_delay_hours if total_delay_hours.total_seconds() > 0 else "00:00",
                          'overtime_hours': formatted_overtime_hours if total_overtime_hours.total_seconds() > 0 else "00:00",
                          'compensation_hours': formatted_compensation if total_compensation.total_seconds() > 0 else "00:00", })
-
                     # Avanzar a la siguiente fecha
                     current_date += timedelta(days=1)
-
             data = {'date': dates, 'users': users_summary}
-
             return Response({'data': data}, status=status.HTTP_200_OK)
         except DatabaseError as e:
             error_message = 'No se puede procesar su solicitud debido a un error de base de datos. Por favor, inténtelo de nuevo más tarde.'

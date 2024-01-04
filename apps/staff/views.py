@@ -99,7 +99,7 @@ class DetailAbstractView(APIView):
             return Response({'message': error_message, 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class ListStaffView(APIView):
+class ListStaffView(ListAbstractView):
     model = Staff
     serializer = StaffSerializer
 
@@ -171,7 +171,7 @@ class StaffNotTrackingView(APIView):
         try:
             date = request.data.get('date', None)
             staff = []
-            users = Staff.objects.all()
+            users = Staff.objects.filter(status=False)
 
             if date:
                 date = datetime.strptime(date, '%Y-%m-%d').date()
