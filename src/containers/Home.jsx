@@ -57,7 +57,7 @@ const Home = () => {
         id: 'check_out', label: 'Salida', icon: <ClockIcon className="h-5 w-5"/>
     },];
 
-    if (user && (user.permissions === 'FIND' || user.permissions === 'VIEWER')) return <Navigate to='/scanner'/>;
+    if (user && user.permissions === 'FIND') return <Navigate to='/scanner'/>;
 
     return (<Layout>
         <Helmet>

@@ -234,11 +234,10 @@ class SummaryView(APIView):
                                 'licencia_sin_gose_de_haber': 0, 'vacaciones': 0, 'descanso_medico': 0, }
 
                 for attendance in attendances.filter(staff=user):
-                    if attendance.worked_hours and attendance.worked_hours.total_seconds() / 3600 > 1:
-                        user_summary['total_days_worked'] += 1
-
+                    # if attendance.worked_hours and attendance.worked_hours.total_seconds() / 3600 > 1:
+                    user_summary['total_days_worked'] += 1
                     if attendance.absenteeism:
-                        if attendance.absenteeism.name == 'Inasistencia' or attendance.absenteeism.name == 'Suspensión' or attendance.absenteeism.name == 'Descanso médico' or attendance.absenteeism.name == 'Licencia sin gose de haber' or attendance.absenteeism.name == 'Vacaciones':
+                        if attendance.absenteeism.name == 'Inasistencia' or attendance.absenteeism.name == 'Suspensión' or attendance.absenteeism.name == 'Descanso médico' or attendance.absenteeism.name == 'Licencia sin gose de haber' or attendance.absenteeism.name == 'Vacaciones' or attendance.absenteeism.name == 'CONADIS' or attendance.absenteeism.name == 'Descanso feriado' or attendance.absenteeism.name == 'Descanso colaborador mes' or attendance.absenteeism.name == 'Descanso semanal':
                             user_summary['total_days_worked'] -= 1
                     if attendance.absenteeism:
                         if attendance.absenteeism and attendance.absenteeism.name == 'Inasistencia' or attendance.absenteeism.name == 'Suspensión':
@@ -257,6 +256,7 @@ class SummaryView(APIView):
                             user_summary['descanso_medico'] += 1
                         if attendance.absenteeism and attendance.absenteeism.name == 'Vacaciones':
                             user_summary['vacaciones'] += 1
+
                     if attendance.approved:
                         user_summary['overtime_25'] += timedelta(hours=attendance.overtime_25_hours.hour,
                                                                  minutes=attendance.overtime_25_hours.minute,
@@ -326,21 +326,25 @@ class OutsourcingView(APIView):
                         user_summary['total_days_worked'] += 1
 
                     if attendance.absenteeism:
-                        if attendance.absenteeism.name == 'Inasistencia' or attendance.absenteeism.name == 'Suspensión' or attendance.absenteeism.name == 'Descanso médico' or attendance.absenteeism.name == 'Licencia sin gose de haber' or attendance.absenteeism.name == 'Vacaciones':
-                            if attendance.worked_hours and attendance.worked_hours.total_seconds() / 3600 > 1:
-                                user_summary['total_days_worked'] -= 1
+                        if attendance.absenteeism.name == 'Inasistencia' or attendance.absenteeism.name == 'Suspensión' or attendance.absenteeism.name == 'Descanso médico' or attendance.absenteeism.name == 'Licencia sin gose de haber' or attendance.absenteeism.name == 'Vacaciones' or attendance.absenteeism.name == 'CONADIS' or attendance.absenteeism.name == 'Descanso feriado' or attendance.absenteeism.name == 'Descanso colaborador mes' or attendance.absenteeism.name == 'Descanso semanal':
+                            # if attendance.worked_hours and attendance.worked_hours.total_seconds() / 3600 > 1:
+                            user_summary['total_days_worked'] -= 1
                     if attendance.absenteeism:
                         if attendance.absenteeism and attendance.absenteeism.name == 'Inasistencia' or attendance.absenteeism.name == 'Suspensión':
                             user_summary['dias_inasistencia'] += [attendance.date.strftime('%d/%m')]
                             user_summary['inasistencia'] += 1
                         if attendance.absenteeism and attendance.absenteeism.name == 'Descanso semanal':
                             user_summary['descanso_semanal'] += 1
+
                         if attendance.absenteeism and attendance.absenteeism.name == 'CONADIS':
                             user_summary['descanso_semanal'] += 1
+
                         if attendance.absenteeism and attendance.absenteeism.name == 'Descanso feriado':
                             user_summary['descanso_semanal'] += 1
+
                         if attendance.absenteeism and attendance.absenteeism.name == 'Descanso colaborador mes':
                             user_summary['descanso_semanal'] += 1
+
                         if attendance.absenteeism and attendance.absenteeism.name == 'Licencia sin gose de haber':
                             user_summary['dias_licencia_sin_gose_de_haber'] += [attendance.date.strftime('%d/%m')]
                             user_summary['licencia_sin_gose_de_haber'] += 1
@@ -355,6 +359,7 @@ class OutsourcingView(APIView):
                             user_summary['compensación_feriados'] += timedelta(hours=attendance.absenteeism_hours.hour,
                                                                                minutes=attendance.absenteeism_hours.minute,
                                                                                seconds=attendance.absenteeism_hours.second)
+                            user_summary['total_days_worked'] -= 1
                             total_compensation_holiday_seconds = user_summary['compensación_feriados'].total_seconds()
                             total_compensation_holiday_hours = int(total_compensation_holiday_seconds // 3600)
                             total_compensation_holiday_minutes = int((total_compensation_holiday_seconds // 60) % 60)
