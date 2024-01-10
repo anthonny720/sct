@@ -171,7 +171,7 @@ class StaffNotTrackingView(APIView):
         try:
             date = request.data.get('date', None)
             staff = []
-            users = Staff.objects.filter(status=False)
+            users = Staff.objects.filter(status=True, trusted=False)
 
             if date:
                 date = datetime.strptime(date, '%Y-%m-%d').date()

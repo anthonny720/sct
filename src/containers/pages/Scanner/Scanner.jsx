@@ -39,8 +39,8 @@ const Scanner = () => {
 
     const options = me && me.get_permission_name === 'Buscador' ? [{id: 'find', label: 'Buscar'}] : [{
         id: 'find', label: 'Buscar'
-    }, {id: 'check_in', label: 'Ingreso'}, {id: 'lunch_start', label: 'Ingreso receso'}, {
-        id: 'lunch_end', label: 'Salida receso'
+    }, {id: 'check_in', label: 'Ingreso'}, {id: 'lunch_start', label: 'Inicio receso'}, {
+        id: 'lunch_end', label: 'Fin receso'
     }, {id: 'check_out', label: 'Salida'},];
 
     return <Layout>

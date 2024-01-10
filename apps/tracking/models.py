@@ -1,8 +1,6 @@
 from datetime import timedelta, datetime, time
 
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 from apps.staff.models import Staff, Absenteeism
 
@@ -48,18 +46,18 @@ class Tracking(models.Model):
         else:
             return f'{self.staff}'
 
-    def round_check_in(self):
-        if self.check_in:
-            minute = self.check_in.minute
-            if minute > 20:
-                # Redondear hacia arriba a la hora siguiente
-                self.check_in = self.check_in.replace(hour=self.check_in.hour + 1, minute=0)
-                self.delay_hours = self.delay_hours.replace(hour=0, minute=0)
-            else:
-                self.delay_hours = self.delay_hours.replace(hour=0, minute=minute)
-
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.worked_hours = timedelta(hours=0)
+
+        if not self.id:
+            self.delay_hours = '00:00:00'
+            if self.check_in:
+                minute = self.check_in.minute
+                if minute > 20:
+                    self.check_in = self.check_in.replace(hour=self.check_in.hour + 1, minute=0, second=0)
+                    self.delay_hours = '00:00:00'  # Asigna un nuevo valor directamente
+                else:
+                    self.delay_hours = '00:{:02d}:00'.format(minute)
         if self.check_in:
             if 5 <= self.check_in.hour < 18:
                 self.is_day_shift = True
@@ -104,24 +102,12 @@ class Tracking(models.Model):
             self.overtime_25_hours = time(0)
             self.overtime_35_hours = time(0)
 
-
-
+        try:
+            # eliminar microsenconds de worked hours que es duration field
+            self.worked_hours = self.worked_hours - timedelta(microseconds=self.worked_hours.microseconds)
+        except:
+            pass
         super().save(force_insert, force_update, using, update_fields)
-
-
-@receiver(post_save, sender=Tracking)
-def update_delay(sender, instance, **kwargs):
-    try:
-        minute = instance.check_in.minute
-        if minute > 20:
-            instance.check_in = instance.check_in.replace(hour=instance.check_in.hour + 1, minute=0)
-            instance.delay_hours = instance.delay_hours.replace(hour=0, minute=0)
-        else:
-            instance.delay_hours = instance.delay_hours.replace(hour=0, minute=minute)
-        Tracking.objects.filter(pk=instance.pk).update(check_in=instance.check_in, delay_hours=instance.delay_hours)
-
-    except Exception as e:
-        pass
 
 
 class Holiday(models.Model):

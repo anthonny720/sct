@@ -52,8 +52,8 @@ const Home = () => {
     };
 
     const options = [{id: 'check_in', label: 'Ingreso', icon: <ClockIcon className="h-5 w-5"/>}, {
-        id: 'lunch_start', label: 'Ingreso receso', icon: <ClockIcon className="h-5 w-5"/>
-    }, {id: 'lunch_end', label: 'Salida receso', icon: <ClockIcon className="h-5 w-5"/>}, {
+        id: 'lunch_start', label: 'Inicio receso', icon: <ClockIcon className="h-5 w-5"/>
+    }, {id: 'lunch_end', label: 'Fin receso', icon: <ClockIcon className="h-5 w-5"/>}, {
         id: 'check_out', label: 'Salida', icon: <ClockIcon className="h-5 w-5"/>
     },];
 

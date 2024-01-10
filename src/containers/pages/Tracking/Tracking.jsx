@@ -62,16 +62,18 @@ const Tracking = () => {
             <title>Registro de horas</title>
         </Helmet>
         <Modal isOpen={isOpen} close={openModal} children={content}/>
-        <div className="mx-auto container bg-white mt-4 p-4 ">
-            <ListUsers users={users_not_tracking}/>
+        <div>
             <button type="button" onClick={() => handleCreate()}
-                    className="absolute bottom-8 right-2 items-center px-2.5 py-2.5 text-sm font-medium text-center text-white bg-[#0dcd79] rounded-full hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-green-300 ">
+                    className="absolute bottom-8 z-20 right-2 items-center px-2.5 py-2.5 text-sm font-medium text-center text-white bg-[#0dcd79] rounded-full hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-green-300 ">
                 <PlusIcon className="w-5 h-5 " aria-hidden="true"/>
             </button>
+        </div>
+        <div className="mx-auto container bg-white mt-4 p-4 overflow-auto scrollbar-hide">
+            <ListUsers users={users_not_tracking}/>
 
 
             <div className={"flex flex-col md:flex-row  gap-4 items-center"}>
-                 <DownloadTableExcel
+                <DownloadTableExcel
                     filename={`Registro asistencia`}
                     sheet="Reporte"
                     currentTableRef={tableRef.current}
