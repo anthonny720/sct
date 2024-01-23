@@ -2,11 +2,11 @@ import React from 'react';
 import {map} from 'lodash'
 import {size} from "lodash/collection";
 
-const Table = ({data}) => {
+const Table = ({data, reference}) => {
 
-    const columns = ['N°', 'Cargo', 'DNI', 'APELLIDOS Y NOMBRES', 'DIAS LABORADOS', 'HORAS EXTRAS 25%', 'HORAS EXTRAS 35%', 'BONIFICACIÓN NOCTURNA POR HORAS','COMPENSACIÓN FERIADO','HORAS FERIADO','FERIADO','TOTAL', 'VACACIONES', 'TOTAL', 'DESCANSO MÉDICO', 'TOTAL', 'LICENCIA SIN GOCE', 'TOTAL', 'INASISTENCIAS', 'TOTAL', 'FECHA DE CESE',]
+    const columns = ['N°', 'Cargo', 'DNI', 'APELLIDOS Y NOMBRES', 'DIAS LABORADOS', 'HORAS EXTRAS 25%', 'HORAS EXTRAS 35%', 'BONIFICACIÓN NOCTURNA POR HORAS', 'COMPENSACIÓN FERIADO', 'HORAS FERIADO', 'FERIADO', 'TOTAL', 'VACACIONES', 'TOTAL', 'DESCANSO MÉDICO', 'TOTAL', 'LICENCIA SIN GOCE', 'TOTAL', 'INASISTENCIAS', 'TOTAL', 'FECHA DE CESE',]
     return (<div className="relative overflow-x-auto scrollbar-hide ">
-            <table className="w-full text-sm text-left text-gray-500 ">
+            <table className="w-full text-sm text-left text-gray-500 " ref={reference}>
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                 <tr>
                     {map(columns, (item, index) => {
@@ -33,7 +33,7 @@ const Table = ({data}) => {
                             {item?.user}
                         </td>
                         <td className="px-6 py-2 font-light text-center">
-                            {item?.total_days_worked+item?.vacaciones+item?.descanso_medico+ item?.descanso_semanal}
+                            {item?.total_days_worked + item?.vacaciones + item?.descanso_medico + item?.descanso_semanal}
                         </td>
                         <td className="px-6 py-2 font-light text-center">
                             {item?.overtime_25}
@@ -46,7 +46,8 @@ const Table = ({data}) => {
                         </td>
                         <td className="px-6 py-2 font-light text-center">
                             {item?.compensación_feriados}
-                        </td><td className="px-6 py-2 font-light text-center">
+                        </td>
+                        <td className="px-6 py-2 font-light text-center">
                             {item?.horas_feriado}
                         </td>
                         <td className="px-6 py-2 font-light text-center">
@@ -80,8 +81,8 @@ const Table = ({data}) => {
                             {item?.inasistencia}
                         </td>
                         <td className="px-6 py-2 font-bold text-center whitespace-nowrap">
-                            {item?.out ? new Date(item?.out + "T00:00:00").toLocaleDateString('es-PE',{
-                                year: 'numeric', month: 'short', day: 'numeric' , timeZone: 'America/Lima'
+                            {item?.out ? new Date(item?.out + "T00:00:00").toLocaleDateString('es-PE', {
+                                year: 'numeric', month: 'short', day: 'numeric', timeZone: 'America/Lima'
                             }) : ''}
                         </td>
 

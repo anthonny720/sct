@@ -16,6 +16,8 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const isAuthenticated = useSelector(state => state.Auth.isAuthenticated);
     const dispatch = useDispatch();
+
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
@@ -33,7 +35,6 @@ const Login = () => {
         form.append('email', email);
         form.append('password', password);
         setIsPressed(true);
-
         dispatch(login(form));
 
     };

@@ -19,20 +19,20 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['py.au.ngrok.io','sct.greenbox.pe','localhost','nx.in.ngrok.io']
+ALLOWED_HOSTS = ['py.au.ngrok.io', 'sct.greenbox.pe', 'localhost', 'nx.in.ngrok.io','*']
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 if not DEBUG:
     CORS_ORIGIN_WHITELIST = ['http://sct.greenbox.pe', 'https://sct.greenbox.pe']
     CSRF_TRUSTED_ORIGINS = ['http://sct.greenbox.pe', 'https://sct.greenbox.pe']
-CSRF_TRUSTED_ORIGINS = ['https://py.au.ngrok.io','http://py.au.ngrok.io','https://nx.in.ngrok.io']
+# CSRF_TRUSTED_ORIGINS = ['https://py.au.ngrok.io', 'http://py.au.ngrok.io', 'https://nx.in.ngrok.io','http://localhost:8000']
 
 # Application definition
 DJANGO_APPS = ['django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions',
                'django.contrib.messages', 'django.contrib.staticfiles', ]
 
-PROJECT_APPS = ['apps.users','apps.staff','apps.tracking']
+PROJECT_APPS = ['apps.users', 'apps.staff', 'apps.tracking']
 
 THIRD_PARTY_APPS = ['corsheaders', 'simple_history', 'rest_framework', 'import_export', 'djoser',
                     'rest_framework_simplejwt', 'rest_framework_simplejwt.token_blacklist', ]
@@ -66,7 +66,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -84,7 +83,6 @@ DATABASES = {
 }
 
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
-
 
 # Password validation
 
@@ -107,7 +105,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -118,7 +115,6 @@ TIME_ZONE = 'America/Lima'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -150,4 +146,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 AUTH_USER_MODEL = "users.UserAccount"
-

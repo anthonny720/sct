@@ -51,7 +51,7 @@ class Staff(models.Model):
     last_name = models.CharField(max_length=100, verbose_name='Apellido')
     full_name = models.CharField(max_length=100, verbose_name='Nombre completo', blank=True, null=True)
     dni = models.CharField(max_length=8, verbose_name='DNI')
-    uuid = models.CharField(editable=True, unique=True, verbose_name='UUID',max_length=15, blank=True, null=True)
+    uuid = models.CharField(editable=True, unique=True, verbose_name='UUID', max_length=15, blank=True, null=True)
     email = models.EmailField(verbose_name='Correo electrónico', blank=True, null=True)
     status = models.BooleanField(default=True, verbose_name='Estado')
     phone = models.CharField(max_length=10, verbose_name='Teléfono')
@@ -64,6 +64,9 @@ class Staff(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Actualizado el')
     overtime_hours = models.DurationField(verbose_name='Horas extras', blank=True, null=True, default='00:00:00')
     trusted = models.BooleanField(default=False, verbose_name='Personal de confianza')
+    hours_per_day = models.TimeField(verbose_name='Horas por día', blank=True, null=True, default='08:00:00')
+    hours_saturday = models.TimeField(verbose_name='Horas por sábado', blank=True, null=True, default='08:00:00')
+    hours_sunday = models.TimeField(verbose_name='Horas por domingo', blank=True, null=True, default='08:00:00')
     history = HistoricalRecords()
 
     def __str__(self):

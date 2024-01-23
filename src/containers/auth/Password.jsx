@@ -4,14 +4,12 @@ import background from '../../assets/sign-up-form.svg';
 import Layout from "../../hocs/Layout";
 import ChangePasswordForm from "./FormPassword";
 import {Helmet} from "react-helmet";
-import {Navigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 const ChangePassword = () => {
     const user = useSelector(state => state.Auth?.user);
 
 
-    if (user && (user.permissions === 'VIEWER' || user.permissions === 'FIND')) return <Navigate to='/home'/>;
     return (<Layout>
         <Helmet>
             <title>Restablecer contraseña</title>

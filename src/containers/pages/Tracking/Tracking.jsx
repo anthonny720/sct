@@ -72,7 +72,7 @@ const Tracking = () => {
             <ListUsers users={users_not_tracking}/>
 
 
-            <div className={"flex flex-col md:flex-row  gap-4 items-center"}>
+            <div className={"flex flex-col md:flex-row  gap-2 items-center pt-4"}>
                 <DownloadTableExcel
                     filename={`Registro asistencia`}
                     sheet="Reporte"
@@ -90,33 +90,29 @@ const Tracking = () => {
                 </DownloadTableExcel>
 
 
-                <div className="flex flex-col md:flex-row items-center gap-2 justify-between py-4 bg-white ">
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <svg className="w-4 h-4 text-gray-500 " aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
-                                      strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                            </svg>
-                        </div>
-                        <input type="text"
-                               onChange={(value) => setParams({...params, 'user': value.target.value})}
-                               className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-max bg-gray-50 focus:ring-blue-500 focus:border-blue-500   "
-                               placeholder="Búsqueda de usuarios"/>
+                <div
+                    className="relative flex flex-col md:flex-row items-center gap-2 justify-between  bg-white w-full  md:w-max">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg className="w-4 h-4 text-gray-500 " aria-hidden="true"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
+                                  strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
                     </div>
-                </div>
-
-                <div className="flex flex-col md:flex-row items-center gap-2 justify-between py-4 bg-white ">
-                    <input type="date"
-                           onChange={(value) => setParams({...params, 'date': value.target.value})}
-                           className="block text-gray-400 p-2 pl-10 text-sm border border-gray-300 rounded-lg w-max bg-gray-50 focus:ring-blue-500 focus:border-blue-500   "
+                    <input type="text"
+                           onChange={(value) => setParams({...params, 'user': value.target.value})}
+                           className="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-full md:w-max bg-gray-50 focus:ring-blue-500 focus:border-blue-500   "
                            placeholder="Búsqueda de usuarios"/>
                 </div>
 
+                <input type="date"
+                       onChange={(value) => setParams({...params, 'date': value.target.value})}
+                       className="block text-gray-400 p-2 pl-10 text-sm border border-gray-300 rounded-lg w-full md:w-max bg-gray-50 focus:ring-blue-500 focus:border-blue-500   "
+                       placeholder=""/>
+
                 <select
                     onChange={(event) => setParams({...params, 'department': event.target.value})}
-                    className="block text-gray-400 p-2 text-sm  border border-gray-300 rounded-lg w-max bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Búsqueda de usuarios"
+                    className="block text-gray-400 p-2 text-sm  border border-gray-300 rounded-lg w-full  md:w-max bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                     value={params.department}
                 >
                     <option value={''}>Todos los departamentos</option>

@@ -139,10 +139,41 @@ const Form = ({close, data, params}) => {
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                     <label htmlFor="overtime_hours"
-                           className={`block mb-2 text-sm font-medium ${!formik.errors.overtime_hours ? 'text-gray-900' : 'text-red-400'}`}>Horas extras</label>
+                           className={`block mb-2 text-sm font-medium ${!formik.errors.overtime_hours ? 'text-gray-900' : 'text-red-400'}`}>Horas
+                        extras</label>
                     <input type="text" name="overtime_hours" id="overtime_hours"
                            value={formik.values.overtime_hours}
                            onChange={(value) => formik.setFieldValue('overtime_hours', value.target.value)}
+                           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 "
+                           placeholder=""/>
+                </div>
+                <div className="col-span-6 sm:col-span-3">
+                    <label htmlFor="hours_per_day"
+                           className={`block mb-2 text-sm font-medium ${!formik.errors.hours_per_day ? 'text-gray-900' : 'text-red-400'}`}>Horas
+                        por dia</label>
+                    <input type="time" name="hours_per_day" id="hours_per_day"
+                           value={formik.values.hours_per_day}
+                           onChange={(value) => formik.setFieldValue('hours_per_day', value.target.value)}
+                           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 "
+                           placeholder=""/>
+                </div>
+                <div className="col-span-6 sm:col-span-3">
+                    <label htmlFor="hours_saturday"
+                           className={`block mb-2 text-sm font-medium ${!formik.errors.hours_saturday ? 'text-gray-900' : 'text-red-400'}`}>Horas
+                        sábado</label>
+                    <input type="time" name="overtime_hours" id="overtime_hours"
+                           value={formik.values.hours_saturday}
+                           onChange={(value) => formik.setFieldValue('hours_saturday', value.target.value)}
+                           className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 "
+                           placeholder=""/>
+                </div>
+                <div className="col-span-6 sm:col-span-3">
+                    <label htmlFor="hours_sunday"
+                           className={`block mb-2 text-sm font-medium ${!formik.errors.hours_sunday ? 'text-gray-900' : 'text-red-400'}`}>Horas
+                        domingo</label>
+                    <input type="time" name="overtime_hours" id="overtime_hours"
+                           value={formik.values.hours_sunday}
+                           onChange={(value) => formik.setFieldValue('hours_sunday', value.target.value)}
                            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 "
                            placeholder=""/>
                 </div>
@@ -163,7 +194,8 @@ const Form = ({close, data, params}) => {
                 </div>
                 <div className="col-span-6 sm:col-span-3">
                     <label htmlFor="trusted"
-                           className={`block mb-2 text-sm font-medium ${!formik.errors.trusted ? 'text-gray-900' : 'text-red-400'}`}>Personal de confianza</label>
+                           className={`block mb-2 text-sm font-medium ${!formik.errors.trusted ? 'text-gray-900' : 'text-red-400'}`}>Personal
+                        de confianza</label>
                     <Switch
                         id={'trusted'}
                         name={'trusted'}
@@ -200,6 +232,9 @@ const initialValues = (data) => {
         birthday: data?.birthday || undefined,
         area: data?.area || '',
         overtime_hours: data?.overtime_hours || '00:00:00',
+        hours_per_day: data?.hours_per_day || '08:00:00',
+        hours_saturday: data?.hours_saturday || '08:00:00',
+        hours_sunday: data?.hours_sunday || '08:00:00',
         trusted: data?.trusted || false,
 
     }
@@ -218,6 +253,9 @@ const newSchema = () => {
         birthday: Yup.date(),
         area: Yup.number().required(),
         overtime_hours: Yup.string().required(),
+        hours_per_day: Yup.string().required(),
+        hours_saturday: Yup.string().required(),
+        hours_sunday: Yup.string().required(),
         trusted: Yup.bool().required(),
     }
 }

@@ -130,7 +130,7 @@ export const login = (form) => async dispatch => {
         dispatch({
             type: REMOVE_AUTH_LOADING
         });
-        dispatch(setAlert(err.response.data.detail, "error"));
+        dispatch(setAlert(err.response?.data?.detail, "error"));
 
     }
 }

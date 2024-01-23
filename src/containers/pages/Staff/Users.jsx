@@ -40,13 +40,13 @@ const Users = () => {
     const handleCreate = () => {
         setIsOpen(true)
         setContent(<div className={"h-full md:h-screen"}>
-            <Form close={openModal}/>
+            <Form close={openModal} params={params}/>
         </div>)
     }
     const handleUpdate = (data) => {
         setIsOpen(true)
         setContent(<div className={"h-full md:h-screen"}>
-            <Form close={openModal} data={data}/>
+            <Form close={openModal} data={data} params={params}/>
         </div>)
     }
 

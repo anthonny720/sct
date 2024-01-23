@@ -46,11 +46,30 @@ class Tracking(models.Model):
         else:
             return f'{self.staff}'
 
+    def calculate_overtime(self, hours, overtime_limit=timedelta(hours=2, minutes=0, seconds=0)):
+        if self.worked_hours > hours:
+            overtime_hours = self.worked_hours - hours
+            self.overtime_25_hours = min(overtime_limit, overtime_hours)
+            self.overtime_35_hours = max(timedelta(0), overtime_hours - overtime_limit)
+
+            datetime_min = datetime.min
+            overtime_25_datetime = datetime_min + self.overtime_25_hours
+            overtime_35_datetime = datetime_min + self.overtime_35_hours
+
+            # Extraer la parte de tiempo de los objetos datetime
+            self.overtime_25_hours = overtime_25_datetime.time().replace(microsecond=0)
+            self.overtime_35_hours = overtime_35_datetime.time().replace(microsecond=0)
+            self.worked_hours = hours
+        else:
+            self.overtime_25_hours = time(0).replace(microsecond=0)
+            self.overtime_35_hours = time(0).replace(microsecond=0)
+
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+
         self.worked_hours = timedelta(hours=0)
 
-        if not self.id:
-            self.delay_hours = '00:00:00'
+        self.delay_hours = '00:00:00'
+        try:
             if self.check_in:
                 minute = self.check_in.minute
                 if minute > 20:
@@ -58,11 +77,18 @@ class Tracking(models.Model):
                     self.delay_hours = '00:00:00'  # Asigna un nuevo valor directamente
                 else:
                     self.delay_hours = '00:{:02d}:00'.format(minute)
+        except:
+            pass
         if self.check_in:
             if 5 <= self.check_in.hour < 18:
                 self.is_day_shift = True
             else:
                 self.is_day_shift = False
+
+        if self.lunch_end:
+            if self.lunch_start:
+                self.lunch_end = self.lunch_end.replace(hour=self.lunch_start.hour + 1, minute=self.lunch_start.minute,
+                                                        second=0)
 
         if self.check_in and self.check_out:
             time_worked = self.check_out - self.check_in
@@ -84,29 +110,24 @@ class Tracking(models.Model):
                     self.absenteeism_hours_extra.hour * 3600 + self.absenteeism_hours_extra.minute * 60 + self.absenteeism_hours_extra.second)
             self.worked_hours += timedelta(seconds=absenteeism_extra_seconds)
 
-        if self.worked_hours > timedelta(hours=8):
-            overtime_hours = self.worked_hours - timedelta(hours=8)
-            overtime_25_hours = min(timedelta(hours=2), overtime_hours)
-            overtime_35_hours = max(timedelta(0), overtime_hours - timedelta(hours=2))
-
-            # Crear objetos datetime completos con una fecha mínima
-            datetime_min = datetime.min
-            overtime_25_datetime = datetime_min + overtime_25_hours
-            overtime_35_datetime = datetime_min + overtime_35_hours
-
-            # Extraer la parte de tiempo de los objetos datetime
-            self.overtime_25_hours = overtime_25_datetime.time()
-            self.overtime_35_hours = overtime_35_datetime.time()
-            self.worked_hours = timedelta(hours=8)
-        else:
-            self.overtime_25_hours = time(0)
-            self.overtime_35_hours = time(0)
-
         try:
-            # eliminar microsenconds de worked hours que es duration field
+            # Calculate overtime
+            if self.date.strftime('%A') == 'Saturday':
+                self.calculate_overtime(
+                    timedelta(hours=self.staff.hours_saturday.hour, minutes=self.staff.hours_saturday.minute))
+            elif self.date.strftime('%A') == 'Sunday':
+                self.calculate_overtime(
+                    timedelta(hours=self.staff.hours_sunday.hour, minutes=self.staff.hours_sunday.minute))
+            else:
+                self.calculate_overtime(
+                    timedelta(hours=self.staff.hours_per_day.hour, minutes=self.staff.hours_per_day.minute))
+        except:
+            pass
+        try:
             self.worked_hours = self.worked_hours - timedelta(microseconds=self.worked_hours.microseconds)
         except:
             pass
+
         super().save(force_insert, force_update, using, update_fields)
 
 

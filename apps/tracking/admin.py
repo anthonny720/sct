@@ -9,10 +9,12 @@ from apps.tracking.models import Tracking, Holiday
 
 @admin.register(Tracking)
 class TrackingAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
-    list_display = ('staff', 'date', 'worked_hours', 'check_in', 'lunch_start', 'lunch_end', 'check_out', 'absenteeism',
+    list_display = ('staff','is_day_shift', 'date', 'worked_hours', 'check_in', 'lunch_start', 'lunch_end', 'check_out', 'absenteeism',
                     'absenteeism_hours',)
-    search_fields = ('staff__name',)
+    search_fields = ('staff__full_name',)
+    list_editable = ('is_day_shift',)
     list_filter = ('staff__area__name',)
+    date_hierarchy = 'date'
     list_per_page = 25
 
 

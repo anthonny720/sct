@@ -1,5 +1,5 @@
 from datetime import datetime, date
-
+from datetime import timedelta
 from django.db import DatabaseError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -304,7 +304,7 @@ class OutsourcingView(APIView):
             # Filtrar registros de asistencia dentro del rango de fechas
             attendances = Tracking.objects.filter(date__range=[start_date, end_date])
 
-            users = Staff.objects.filter(trusted=False)
+            users = Staff.objects.all()
 
             summary = []
 
@@ -331,7 +331,7 @@ class OutsourcingView(APIView):
                             user_summary['total_days_worked'] -= 1
                     if attendance.absenteeism:
                         if attendance.absenteeism and attendance.absenteeism.name == 'Inasistencia' or attendance.absenteeism.name == 'Suspensión':
-                            user_summary['dias_inasistencia'] += [attendance.date.strftime('%d/%m')]
+                            # user_summary['dias_inasistencia'] += [attendance.date.strftime('%d/%m')]
                             user_summary['inasistencia'] += 1
                         if attendance.absenteeism and attendance.absenteeism.name == 'Descanso semanal':
                             user_summary['descanso_semanal'] += 1
@@ -356,28 +356,31 @@ class OutsourcingView(APIView):
                             user_summary['vacaciones'] += 1
 
                         if attendance.absenteeism and attendance.absenteeism.name == 'Compensación feriados':
+                            user_summary['compensación_feriados'] = timedelta(hours=0)
                             user_summary['compensación_feriados'] += timedelta(hours=attendance.absenteeism_hours.hour,
                                                                                minutes=attendance.absenteeism_hours.minute,
                                                                                seconds=attendance.absenteeism_hours.second)
                             user_summary['total_days_worked'] -= 1
+
                             total_compensation_holiday_seconds = user_summary['compensación_feriados'].total_seconds()
                             total_compensation_holiday_hours = int(total_compensation_holiday_seconds // 3600)
                             total_compensation_holiday_minutes = int((total_compensation_holiday_seconds // 60) % 60)
                             user_summary[
-                                'compensación_feriados'] = f"{total_compensation_holiday_hours:02d}:{total_compensation_holiday_minutes:02d}"
+                                'compensación_feriados'] = f"{int(total_compensation_holiday_hours):02d}:{int(total_compensation_holiday_minutes):02d}"
 
                     holiday = Holiday.objects.filter(date=attendance.date).first()
                     if holiday:
-                        if attendance.worked_hours and attendance.worked_hours.total_seconds() / 3600 > 1:
-                            user_summary['dias_feriado'] += [attendance.date.strftime('%d/%m')]
-                            user_summary['feriado'] += 1
-                            user_summary['horas_feriado'] += attendance.worked_hours
+                        if attendance.check_in and attendance.check_out:
+                            if attendance.worked_hours and attendance.worked_hours.total_seconds() / 3600 > 1:
+                                user_summary['dias_feriado'] += [attendance.date.strftime('%d/%m')]
+                                user_summary['feriado'] += 1
+                                user_summary['horas_feriado'] += attendance.worked_hours
 
-                            total_worked_holiday_seconds = user_summary['horas_feriado'].total_seconds()
-                            total_worked_holiday_hours = int(total_worked_holiday_seconds // 3600)
-                            total_worked_holiday_minutes = int((total_worked_holiday_seconds // 60) % 60)
-                            user_summary[
-                                'horas_feriado'] = f"{total_worked_holiday_hours:02d}:{total_worked_holiday_minutes:02d}"
+                                total_worked_holiday_seconds = user_summary['horas_feriado'].total_seconds()
+                                total_worked_holiday_hours = int(total_worked_holiday_seconds // 3600)
+                                total_worked_holiday_minutes = int((total_worked_holiday_seconds // 60) % 60)
+                                user_summary[
+                                    'horas_feriado'] = f"{total_worked_holiday_hours:02d}:{total_worked_holiday_minutes:02d}"
 
                     if attendance.approved:
                         user_summary['overtime_25'] += timedelta(hours=attendance.overtime_25_hours.hour,
@@ -412,9 +415,6 @@ class OutsourcingView(APIView):
         except Exception as e:
             error_message = 'Se ha producido un error inesperado en el servidor. Por favor, inténtelo de nuevo más tarde.'
             return Response({'message': error_message, 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-from datetime import timedelta
 
 
 def format_time(time):
@@ -525,6 +525,5 @@ class CalendarView(APIView):
             error_message = 'No se puede procesar su solicitud debido a un error de base de datos. Por favor, inténtelo de nuevo más tarde.'
             return Response({'message': error_message, 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as e:
-            print(e)
             error_message = 'Se ha producido un error inesperado en el servidor. Por favor, inténtelo de nuevo más tarde.'
             return Response({'message': error_message, 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

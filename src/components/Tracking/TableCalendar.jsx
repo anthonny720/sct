@@ -2,10 +2,10 @@ import React from 'react';
 import {map} from 'lodash'
 import {size} from "lodash/collection";
 
-const Table = ({data, option}) => {
+const Table = ({data, option, reference}) => {
 
     return (<div className="relative overflow-x-auto scrollbar-hide ">
-            <table className="w-full text-sm text-left text-gray-500 ">
+            <table className="w-full text-sm text-left text-gray-500 " ref={reference}>
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                 <tr>
                     <th scope="col" className="px-6 py-2 text-center whitespace-nowrap sticky left-0 bg-white">
