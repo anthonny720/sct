@@ -11,7 +11,7 @@ class StaffAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     list_display = ('name', 'last_name', 'dni', 'area', 'status',)
     search_fields = ('name', 'last_name', 'dni',)
     ordering = ['name']
-    list_filter = ('area', 'status',)
+    list_filter = ('area', 'status', 'trusted', 'hours_per_day', 'hours_saturday','hours_sunday',)
     list_editable = ('status',)
     list_per_page = 25
 

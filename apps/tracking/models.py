@@ -17,8 +17,14 @@ class Tracking(models.Model):
     staff = models.ForeignKey(Staff, on_delete=models.PROTECT, verbose_name='Personal', related_name='tracking_staff')
     date = models.DateField(verbose_name='Fecha', blank=True, null=True)
     check_in = models.DateTimeField(verbose_name='Hora de entrada', blank=True, null=True, )
+    real_check_in = models.DateTimeField(verbose_name='Hora de entrada real', blank=True, null=True, )
+
     lunch_start = models.DateTimeField(verbose_name='Inicio de almuerzo', blank=True, null=True, )
+
     lunch_end = models.DateTimeField(verbose_name='Fin de almuerzo', blank=True, null=True, )
+
+    real_lunch_end = models.DateTimeField(verbose_name='Fin de almuerzo real', blank=True, null=True, )
+
     check_out = models.DateTimeField(verbose_name='Hora de salida', blank=True, null=True, )
     absenteeism = models.ForeignKey(Absenteeism, on_delete=models.PROTECT, verbose_name='Ausentismo',
                                     related_name='tracking_absenteeism', blank=True, null=True)
@@ -64,14 +70,30 @@ class Tracking(models.Model):
             self.overtime_25_hours = time(0).replace(microsecond=0)
             self.overtime_35_hours = time(0).replace(microsecond=0)
 
+    def get_real_worked_hours(self):
+        try:
+            if self.real_check_in and self.check_out:
+                time_real = self.check_out - self.real_check_in
+                if self.lunch_start and self.real_lunch_end:
+                    lunch_time = self.real_lunch_end - self.lunch_start
+                    time_real -= lunch_time
+                time_real = time_real - timedelta(microseconds=time_real.microseconds)
+                return time_real
+            else:
+                return '00:00:00'
+        except:
+            return '00:00:00'
+
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
 
         self.worked_hours = timedelta(hours=0)
 
         self.delay_hours = '00:00:00'
+
         try:
             if self.check_in:
                 minute = self.check_in.minute
+                self.real_check_in = self.check_in
                 if minute > 20:
                     self.check_in = self.check_in.replace(hour=self.check_in.hour + 1, minute=0, second=0)
                     self.delay_hours = '00:00:00'  # Asigna un nuevo valor directamente
@@ -86,6 +108,7 @@ class Tracking(models.Model):
                 self.is_day_shift = False
 
         if self.lunch_end:
+            self.real_lunch_end = self.lunch_end
             if self.lunch_start:
                 self.lunch_end = self.lunch_end.replace(hour=self.lunch_start.hour + 1, minute=self.lunch_start.minute,
                                                         second=0)
@@ -112,15 +135,16 @@ class Tracking(models.Model):
 
         try:
             # Calculate overtime
-            if self.date.strftime('%A') == 'Saturday':
-                self.calculate_overtime(
-                    timedelta(hours=self.staff.hours_saturday.hour, minutes=self.staff.hours_saturday.minute))
-            elif self.date.strftime('%A') == 'Sunday':
-                self.calculate_overtime(
-                    timedelta(hours=self.staff.hours_sunday.hour, minutes=self.staff.hours_sunday.minute))
-            else:
-                self.calculate_overtime(
-                    timedelta(hours=self.staff.hours_per_day.hour, minutes=self.staff.hours_per_day.minute))
+            if self.check_in and self.check_out:
+                if self.date.strftime('%A') == 'Saturday':
+                    self.calculate_overtime(
+                        timedelta(hours=self.staff.hours_saturday.hour, minutes=self.staff.hours_saturday.minute))
+                elif self.date.strftime('%A') == 'Sunday':
+                    self.calculate_overtime(
+                        timedelta(hours=self.staff.hours_sunday.hour, minutes=self.staff.hours_sunday.minute))
+                else:
+                    self.calculate_overtime(
+                        timedelta(hours=self.staff.hours_per_day.hour, minutes=self.staff.hours_per_day.minute))
         except:
             pass
         try:

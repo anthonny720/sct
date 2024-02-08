@@ -1,5 +1,6 @@
 from datetime import datetime, date
 from datetime import timedelta
+
 from django.db import DatabaseError
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -9,10 +10,35 @@ from rest_framework.views import APIView
 
 from apps.staff.models import Staff
 from apps.tracking.models import Tracking, Holiday
-from apps.tracking.serializers import TrackingSerializer
+from apps.tracking.serializers import TrackingSerializer, TrackingSummarySerializer
 
 
 # Create your views here.
+class TrackingSummaryListView(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            user = self.request.query_params.get('user', None)
+            date = self.request.query_params.get('date', None)
+            department = self.request.query_params.get('department', None)
+            model = None
+            if date:
+                model = Tracking.objects.filter(date=datetime.strptime(date, '%Y-%m-%d'))
+            else:
+                model = Tracking.objects.filter(date=datetime.now())
+            if user:
+                model = model.filter(staff__full_name__icontains=user)
+            if department:
+                model = model.filter(staff__area__id=department)
+            serializer = TrackingSummarySerializer(model, many=True)
+            return Response({'data': serializer.data}, status=status.HTTP_200_OK)
+        except DatabaseError as e:
+            error_message = 'No se puede procesar su solicitud debido a un error de base de datos. Por favor, inténtelo de nuevo más tarde.'
+            return Response({'message': error_message, 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            error_message = 'Se ha producido un error inesperado en el servidor. Por favor, inténtelo de nuevo más tarde.'
+            return Response({'message': error_message, 'detail': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class TrackingListView(APIView):
     def get(self, request, *args, **kwargs):
         try:
@@ -258,31 +284,37 @@ class SummaryView(APIView):
                             user_summary['vacaciones'] += 1
 
                     if attendance.approved:
-                        user_summary['overtime_25'] += timedelta(hours=attendance.overtime_25_hours.hour,
-                                                                 minutes=attendance.overtime_25_hours.minute,
-                                                                 seconds=attendance.overtime_25_hours.second)
-
                         user_summary['overtime_35'] += timedelta(hours=attendance.overtime_35_hours.hour,
                                                                  minutes=attendance.overtime_35_hours.minute,
                                                                  seconds=attendance.overtime_35_hours.second)
+
+                        user_summary['overtime_25'] += timedelta(hours=attendance.overtime_25_hours.hour,
+                                                                 minutes=attendance.overtime_25_hours.minute,
+                                                                 seconds=attendance.overtime_25_hours.second)
 
                     user_summary[
                         'total_worked_night'] += attendance.worked_hours if not attendance.is_day_shift else timedelta(
                         hours=0)
 
-                # Formatear las duraciones de tiempo en hh:mm
-                user_summary['overtime_25'] = str(timedelta(hours=user_summary['overtime_25'].seconds // 3600,
-                                                            minutes=(user_summary['overtime_25'].seconds // 60) % 60))
+                # Convertir la duración total a formato "hh:mm:ss" para overtime_35
+                total_seconds_35 = int(user_summary['overtime_35'].total_seconds())
+                hours_35, remainder_35 = divmod(total_seconds_35, 3600)
+                minutes_35, seconds_35 = divmod(remainder_35, 60)
+                result_time_35 = "{:02d}:{:02d}:{:02d}".format(hours_35, minutes_35, seconds_35)
+                user_summary['overtime_35'] = result_time_35
 
-                user_summary['overtime_35'] = str(timedelta(hours=user_summary['overtime_35'].seconds // 3600,
-                                                            minutes=(user_summary['overtime_35'].seconds // 60) % 60))
+                # Convertir la duración total a formato "hh:mm:ss" para overtime_25
+                total_seconds_25 = int(user_summary['overtime_25'].total_seconds())
+                hours_25, remainder_25 = divmod(total_seconds_25, 3600)
+                minutes_25, seconds_25 = divmod(remainder_25, 60)
+                result_time_25 = "{:02d}:{:02d}:{:02d}".format(hours_25, minutes_25, seconds_25)
+                user_summary['overtime_25'] = result_time_25
+
                 total_worked_night_seconds = user_summary['total_worked_night'].total_seconds()
                 total_worked_night_hours = int(total_worked_night_seconds // 3600)
                 total_worked_night_minutes = int((total_worked_night_seconds // 60) % 60)
                 user_summary['total_worked_night'] = f"{total_worked_night_hours:02d}:{total_worked_night_minutes:02d}"
-
                 summary.append(user_summary)
-
             return Response({'data': summary}, status=status.HTTP_200_OK)
         except DatabaseError as e:
             error_message = 'No se puede procesar su solicitud debido a un error de base de datos. Por favor, inténtelo de nuevo más tarde.'
@@ -322,8 +354,8 @@ class OutsourcingView(APIView):
                                 'compensación_feriados': timedelta(hours=0)}
 
                 for attendance in attendances.filter(staff=user):
-                    if attendance.worked_hours and attendance.worked_hours.total_seconds() / 3600 > 1:
-                        user_summary['total_days_worked'] += 1
+                    # if attendance.worked_hours and attendance.worked_hours.total_seconds() / 3600 > 1:
+                    user_summary['total_days_worked'] += 1
 
                     if attendance.absenteeism:
                         if attendance.absenteeism.name == 'Inasistencia' or attendance.absenteeism.name == 'Suspensión' or attendance.absenteeism.name == 'Descanso médico' or attendance.absenteeism.name == 'Licencia sin gose de haber' or attendance.absenteeism.name == 'Vacaciones' or attendance.absenteeism.name == 'CONADIS' or attendance.absenteeism.name == 'Descanso feriado' or attendance.absenteeism.name == 'Descanso colaborador mes' or attendance.absenteeism.name == 'Descanso semanal':
@@ -331,7 +363,7 @@ class OutsourcingView(APIView):
                             user_summary['total_days_worked'] -= 1
                     if attendance.absenteeism:
                         if attendance.absenteeism and attendance.absenteeism.name == 'Inasistencia' or attendance.absenteeism.name == 'Suspensión':
-                            # user_summary['dias_inasistencia'] += [attendance.date.strftime('%d/%m')]
+                            user_summary['dias_inasistencia'] += [attendance.date.strftime('%d/%m')]
                             user_summary['inasistencia'] += 1
                         if attendance.absenteeism and attendance.absenteeism.name == 'Descanso semanal':
                             user_summary['descanso_semanal'] += 1
@@ -396,11 +428,19 @@ class OutsourcingView(APIView):
                         hours=0)
 
                 # Formatear las duraciones de tiempo en hh:mm
-                user_summary['overtime_25'] = str(timedelta(hours=user_summary['overtime_25'].seconds // 3600,
-                                                            minutes=(user_summary['overtime_25'].seconds // 60) % 60))
+                # Convertir la duración total a formato "hh:mm:ss" para overtime_35
+                total_seconds_35 = int(user_summary['overtime_35'].total_seconds())
+                hours_35, remainder_35 = divmod(total_seconds_35, 3600)
+                minutes_35, seconds_35 = divmod(remainder_35, 60)
+                result_time_35 = "{:02d}:{:02d}:{:02d}".format(hours_35, minutes_35, seconds_35)
+                user_summary['overtime_35'] = result_time_35
 
-                user_summary['overtime_35'] = str(timedelta(hours=user_summary['overtime_35'].seconds // 3600,
-                                                            minutes=(user_summary['overtime_35'].seconds // 60) % 60))
+                # Convertir la duración total a formato "hh:mm:ss" para overtime_25
+                total_seconds_25 = int(user_summary['overtime_25'].total_seconds())
+                hours_25, remainder_25 = divmod(total_seconds_25, 3600)
+                minutes_25, seconds_25 = divmod(remainder_25, 60)
+                result_time_25 = "{:02d}:{:02d}:{:02d}".format(hours_25, minutes_25, seconds_25)
+                user_summary['overtime_25'] = result_time_25
                 total_worked_night_seconds = user_summary['total_worked_night'].total_seconds()
                 total_worked_night_hours = int(total_worked_night_seconds // 3600)
                 total_worked_night_minutes = int((total_worked_night_seconds // 60) % 60)

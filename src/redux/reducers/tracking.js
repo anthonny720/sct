@@ -5,6 +5,8 @@ import {
     GET_CALENDAR_SUCCESS,
     GET_OUTSOURCING_FAIL,
     GET_OUTSOURCING_SUCCESS,
+    GET_REAL_TRACKING_FAIL,
+    GET_REAL_TRACKING_SUCCESS,
     GET_SUMMARY_FAIL,
     GET_SUMMARY_SUCCESS,
     GET_TRACKING_FAIL,
@@ -16,7 +18,7 @@ import {
 } from "../actions/types";
 
 const initialState = {
-    tracking: null, summary: null, outsourcing: null, calendar: null, info: null
+    tracking: null, summary: null, outsourcing: null, calendar: null, info: null, tracking_real: null
 }
 
 export default function Tracking(state = initialState, action) {
@@ -55,6 +57,14 @@ export default function Tracking(state = initialState, action) {
         case GET_TRACKING_FAIL:
             return {
                 ...state, tracking: null
+            }
+        case GET_REAL_TRACKING_SUCCESS:
+            return {
+                ...state, tracking_real: payload.data
+            }
+        case GET_REAL_TRACKING_FAIL:
+            return {
+                ...state, tracking_real: null
             }
         case SEND_TRACKING_SUCCESS:
             return {

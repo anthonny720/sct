@@ -12,7 +12,7 @@ const Header = () => {
                         <span className=' text-xs font-bold'>+51 982 704 759</span>
                         <span className="h-6 w-px bg-white  mx-2" aria-hidden="true"/>
                         <i className=' mt-0.5 mr-1 text-gray-500 '></i>
-                        <span className=' text-xs font-bold'>data_analyst@greenbox.pe</span>
+                        <span className=' text-xs font-bold'>data.analyst@greenbox.pe</span>
                     </div>
                 </form>
 

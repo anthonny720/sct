@@ -4,7 +4,7 @@ import {
     GET_CALENDAR_FAIL,
     GET_CALENDAR_SUCCESS,
     GET_OUTSOURCING_FAIL,
-    GET_OUTSOURCING_SUCCESS,
+    GET_OUTSOURCING_SUCCESS, GET_REAL_TRACKING_FAIL, GET_REAL_TRACKING_SUCCESS,
     GET_SUMMARY_FAIL,
     GET_SUMMARY_SUCCESS,
     GET_TRACKING_FAIL,
@@ -40,6 +40,31 @@ export const get_tracking = (params) => async dispatch => {
         });
     }
 }
+
+export const get_real_tracking = (params) => async dispatch => {
+    const config = {
+        headers: {
+            'Authorization': `JWT ${localStorage.getItem('access')}`, 'Accept': 'application/json'
+        }, params: {...params}
+    };
+    try {
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/tracking/real`, config);
+        if (res.status === 200) {
+            dispatch({
+                type: GET_REAL_TRACKING_SUCCESS, payload: res.data
+            });
+        } else {
+            dispatch({
+                type: GET_REAL_TRACKING_FAIL
+            });
+        }
+    } catch (err) {
+        dispatch({
+            type: GET_REAL_TRACKING_FAIL
+        });
+    }
+}
+
 export const add_tracking = (form, params) => async dispatch => {
     const config = {
         headers: {

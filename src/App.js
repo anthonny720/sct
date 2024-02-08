@@ -15,6 +15,7 @@ import Summary from "./containers/pages/Tracking/Summary";
 import Outsourcing from "./containers/pages/Tracking/Outsourcing";
 import Calendar from "./containers/pages/Tracking/Calendar";
 import Scanner from "./containers/pages/Scanner/Scanner";
+import RealTracking from "./containers/pages/Tracking/Real";
 
 const App = () => {
 
@@ -43,6 +44,7 @@ const App = () => {
 
                             {/*Tracking*/}
                             <Route path="attendance" element={<Tracking/>}/>
+                            <Route path="attendance-real" element={<RealTracking/>}/>
                             <Route path="summary" element={<Summary/>}/>
                             <Route path="outsourcing" element={<Outsourcing/>}/>
                             <Route path="calendar" element={<Calendar/>}/>

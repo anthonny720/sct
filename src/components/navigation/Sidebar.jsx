@@ -3,7 +3,7 @@ import {NavLink} from "react-router-dom";
 import {
     CalendarDaysIcon,
     ClockIcon,
-    Cog6ToothIcon,
+    Cog6ToothIcon, DocumentTextIcon,
     HomeIcon,
     NewspaperIcon,
     PaperAirplaneIcon,
@@ -18,6 +18,8 @@ const Sidebar = () => {
         name: "Empleados", link: '/people', icon: <UsersIcon className={"w-6 h-6"}/>
     }, {
         name: "Registro de horas", link: '/attendance', icon: <ClockIcon className={"w-6 h-6"}/>
+    },{
+        name: "Registro real", link: '/attendance-real', icon: <DocumentTextIcon className={"w-6 h-6"}/>
     }, {
         name: "Control diario", link: '/calendar', icon: <CalendarDaysIcon className={"w-6 h-6"}/>
     }, {
