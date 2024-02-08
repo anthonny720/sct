@@ -30,7 +30,7 @@ const TableRealTracking = ({data, reference}) => {
                             })}
                         </td>
                         <td className="px-6 py-2 font-light text-center">
-                            {item?.check_in && new Date(item?.real_check_in).toLocaleTimeString('es-PE', {
+                            {item?.real_check_in && new Date(item?.real_check_in).toLocaleTimeString('es-PE', {
                                 hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/Lima'
                             })}
                         </td>
@@ -40,7 +40,7 @@ const TableRealTracking = ({data, reference}) => {
                             })}
                         </td>
                         <td className="px-6 py-2 font-light text-center">
-                            {item?.lunch_end && new Date(item?.real_lunch_end).toLocaleTimeString('es-PE', {
+                            {item?.real_lunch_end && new Date(item?.real_lunch_end).toLocaleTimeString('es-PE', {
                                 hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/Lima'
                             })}
                         </td>
